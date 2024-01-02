@@ -20,9 +20,22 @@
       "message": "git clone https://github.com/cocktailpeanut/Fooocus app"
     }
   }, {
+    "method": "shell.run",
+    "params": {
+      "venv": "env",
+      "path": "app",
+      "message": [
+        "pip install -r requirements_versions.txt",
+        "{{(gpu === 'nvidia' ? self.cmds.nvidia : (gpu === 'amd' ? self.cmds.amd[platform] : self.cmds.default))}}"
+      ]
+    }
+  }, {
     "method": "fs.share",
     "params": {
       "drive": {
+        "torch": "app/env/lib/python3.10/site-packages/torch",
+        "torchvision": "app/env/lib/python3.10/site-packages/torchvision",
+        "torchaudio": "app/env/lib/python3.10/site-packages/torchaudio",
         "checkpoints": "app/models/checkpoints",
         "clip": "app/models/clip",
         "clip_vision": "app/models/clip_vision",
@@ -44,16 +57,6 @@
       "peers": [
         "https://github.com/cocktailpeanutlabs/automatic1111.git",
         "https://github.com/cocktailpeanutlabs/comfyui.git"
-      ]
-    }
-  }, {
-    "method": "shell.run",
-    "params": {
-      "venv": "env",
-      "path": "app",
-      "message": [
-        "pip install -r requirements_versions.txt",
-        "{{(gpu === 'nvidia' ? self.cmds.nvidia : (gpu === 'amd' ? self.cmds.amd[platform] : self.cmds.default))}}"
       ]
     }
   }, {
