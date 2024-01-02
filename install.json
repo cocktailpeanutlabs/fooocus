@@ -10,6 +10,11 @@
     "default": "pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu"
   },
   "run": [{
+    "method": "fs.rm",
+    "params": {
+      "path": "app"
+    }
+  }, {
     "method": "shell.run",
     "params": {
       "message": "git clone https://github.com/cocktailpeanut/Fooocus app"

@@ -9,6 +9,7 @@ module.exports = {
     let windowsAmd = (kernel.gpu === "amd" && kernel.platform === "win32")
     let extraFlags = (windowsAmd ? " --directml --disable-in-browser" : " --disable-in-browser")
 
+
     let installing = kernel.running(__dirname, "install.json")
     let installed = await kernel.exists(__dirname, "app", "env")
     if (installing) {
@@ -42,6 +43,8 @@ module.exports = {
           ]
         }, {
           icon: "fa-solid fa-rotate", text: "Update", href: "update.json"
+        }, {
+          icon: "fa-solid fa-plug", text: "Fresh reinstall", href: "install.json"
         }]
       }
     } else {
