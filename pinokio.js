@@ -44,7 +44,9 @@ module.exports = {
         }, {
           icon: "fa-solid fa-rotate", text: "Update", href: "update.json"
         }, {
-          icon: "fa-solid fa-plug", text: "Fresh reinstall", href: "install.json"
+          icon: "fa-solid fa-plug", text: "Reinstall", href: "install.json"
+        }, {
+          icon: "fa-solid fa-broom", text: "Reset", href: "reset.json"
         }]
       }
     } else {
