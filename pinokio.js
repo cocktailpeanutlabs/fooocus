@@ -1,5 +1,6 @@
 const path = require("path")
 module.exports = {
+  version: 1,
   title: "Fooocus",
   description: "Minimal Stable Diffusion UI",
   icon: "icon.jpeg",
