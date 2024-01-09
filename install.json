@@ -12,7 +12,7 @@
   "run": [{
     "method": "shell.run",
     "params": {
-      "message": "git clone https://github.com/cocktailpeanut/Fooocus app"
+      "message": "git clone https://github.com/lllyasviel/Fooocus app"
     }
   }, {
     "method": "shell.run",
