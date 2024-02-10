@@ -17,5 +17,11 @@
       "target": "{{local.url}}",
       "url": "{{local.url}}"
     }
+  }, {
+    "method": "proxy.start",
+    "params": {
+      "uri": "{{local.url}}",
+      "name": "Local Sharing"
+    }
   }]
 }

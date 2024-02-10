@@ -1,13 +1,16 @@
 {
-  "pinokiod": ">=0.1.49",
   "cmds": {
-    "nvidia": "pip install torch torchvision torchaudio xformers --index-url https://download.pytorch.org/whl/cu118",
-    "amd": {
-      "linux": "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.6",
-      "win32": "pip install torch-directml",
-      "darwin": "pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu"
+    "win32": {
+      "nvidia": "pip install torch torchvision torchaudio xformers --index-url https://download.pytorch.org/whl/cu121",
+      "amd": "pip install torch-directml",
+      "cpu": "pip install torch torchvision torchaudio"
     },
-    "default": "pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu"
+    "darwin": "pip install torch torchvision torchaudio",
+    "linux": {
+      "nvidia": "pip install torch torchvision torchaudio xformers --index-url https://download.pytorch.org/whl/cu121",
+      "amd": "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7",
+      "cpu": "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu"
+    }
   },
   "run": [{
     "method": "shell.run",
@@ -20,18 +23,14 @@
       "venv": "env",
       "path": "app",
       "message": [
-        "pip install -r requirements_versions.txt",
-        "{{(gpu === 'nvidia' ? self.cmds.nvidia : (gpu === 'amd' ? self.cmds.amd[platform] : self.cmds.default))}}"
+        "{{(platform === 'darwin' ? self.cmds.darwin : (['nvidia', 'amd'].includes(gpu) ? self.cmds[platform][gpu] : self.cmds[platform].cpu))}}",
+        "pip install -r requirements_versions.txt"
       ]
     }
   }, {
     "method": "fs.share",
     "params": {
       "drive": {
-        "torch": "{{platform === 'win32' ? 'app/env/Lib/site-packages/torch' : 'app/env/lib/python3.10/site-packages/torch'}}",
-        "torchvision": "{{platform === 'win32' ? 'app/env/Lib/site-packages/torchvision' : 'app/env/lib/python3.10/site-packages/torchvision'}}",
-        "torchaudio": "{{platform === 'win32' ? 'app/env/Lib/site-packages/torchaudio' : 'app/env/lib/python3.10/site-packages/torchaudio'}}",
-        "functorch": "{{platform === 'win32' ? 'app/env/Lib/site-packages/functorch' : 'app/env/lib/python3.10/site-packages/functorch'}}",
         "checkpoints": "app/models/checkpoints",
         "clip": "app/models/clip",
         "clip_vision": "app/models/clip_vision",
@@ -54,6 +53,13 @@
         "https://github.com/cocktailpeanutlabs/automatic1111.git",
         "https://github.com/cocktailpeanutlabs/comfyui.git"
       ]
+    }
+  }, {
+    "method": "fs.share",
+    "params": {
+      "drive": {
+        "outputs": "app/outputs"
+      }
     }
   }, {
     "method": "notify",
