@@ -15,9 +15,13 @@ module.exports = {
     let directml = (windowsAMD ? "--directml " : "")
     console.log({ windowsAMD, directml })
 
-    let isGPU = ["nvidia", "amd"].includes(kernel.gpu)
-    let isAppleSilicon = (kernel.arch === "arm64" && kernel.platform === "darwin")
-    let accelerated = isGPU || isAppleSilicon
+    let accelerated
+
+    if (kernel.platform === "darwin") {
+      accelerated = kernel.arch === "arm64" // m1/m2/m3
+    } else {
+      accelerated = ["nvidia", "amd"].includes(kernel.gpu)  // gpu is amd/nvidia
+    }
 
     let alwaysCPU = (accelerated ? "" : "--always-cpu ")
 
