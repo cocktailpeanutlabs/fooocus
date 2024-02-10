@@ -15,6 +15,12 @@ module.exports = {
     let directml = (windowsAMD ? "--directml " : "")
     console.log({ windowsAMD, directml })
 
+    let isGPU = ["nvidia", "amd"].includes(kernel.gpu)
+    let isAppleSilicon = (kernel.arch === "arm64" && kernel.platform === "darwin")
+    let accelerated = isGPU || isAppleSilicon
+
+    let alwaysCPU = (accelerated ? "" : "--always-cpu ")
+
     let installing = kernel.running(__dirname, "install.json")
     let installed = await kernel.exists(__dirname, "app", "env")
     if (installing) {
@@ -40,11 +46,11 @@ module.exports = {
           icon: "fa-solid fa-power-off",
           text: "Start",
           menu: [
-            { icon: "fa-solid fa-terminal", text: "Default Mode", href: "start.json", params: { flags: `${directml}--preset default${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "Anime Mode", href: "start.json", params: { flags: `${directml}--preset anime${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "Realistic Mode", href: "start.json", params: { flags: `${directml}--preset realistic${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "SAI Mode", href: "start.json", params: { flags: `${directml}--preset sai${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "LCM Mode", href: "start.json", params: { flags: `${directml}--preset lcm${extraFlags}` } },
+            { icon: "fa-solid fa-terminal", text: "Default Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` } },
+            { icon: "fa-solid fa-terminal", text: "Anime Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset anime${extraFlags}` } },
+            { icon: "fa-solid fa-terminal", text: "Realistic Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset realistic${extraFlags}` } },
+            { icon: "fa-solid fa-terminal", text: "SAI Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset sai${extraFlags}` } },
+            { icon: "fa-solid fa-terminal", text: "LCM Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset lcm${extraFlags}` } },
           ]
         }, {
           icon: "fa-solid fa-rotate", text: "Update", href: "update.json"
