@@ -55,6 +55,7 @@ module.exports = {
             { icon: "fa-solid fa-terminal", text: "Realistic Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset realistic${extraFlags}` } },
             { icon: "fa-solid fa-terminal", text: "SAI Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset sai${extraFlags}` } },
             { icon: "fa-solid fa-terminal", text: "LCM Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset lcm${extraFlags}` } },
+            { icon: "fa-solid fa-terminal", text: "Lightning Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset lightning${extraFlags}` } },
           ]
         }, {
           icon: "fa-solid fa-rotate", text: "Update", href: "update.json"
