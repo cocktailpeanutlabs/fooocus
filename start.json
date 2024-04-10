@@ -5,7 +5,7 @@
     "params": {
       "venv": "env",
       "path": "app",
-      "message": "python entry_with_update.py {{input.flags}}",
+      "message": "python launch.py {{input.flags}}",
       "on": [{ "event": "/http:\/\/[0-9.:]+/", "done": true }]
     }
   }, {
