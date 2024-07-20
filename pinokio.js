@@ -1,10 +1,10 @@
 const path = require("path")
 module.exports = {
-  version: "1.1",
+  version: "2.0",
   title: "Fooocus",
   description: "Minimal Stable Diffusion UI",
   icon: "icon.jpeg",
-  menu: async (kernel) => {
+  menu: async (kernel, info) => {
 
     // exception handling for windows amd
     let windowsAmd = (kernel.gpu === "amd" && kernel.platform === "win32")
@@ -25,14 +25,14 @@ module.exports = {
 
     let alwaysCPU = (accelerated ? "" : "--always-cpu ")
 
-    let installing = kernel.running(__dirname, "install.json")
-    let installed = await kernel.exists(__dirname, "app", "env")
+    let installing = info.running("install.json")
+    let installed = info.exists("app/env")
     if (installing) {
       return [{ default: true, icon: "fa-solid fa-plug", text: "Installing...", href: "install.json" }]
     } else if (installed) {
-      let running = kernel.running(__dirname, "start.json")
+      let running = info.running("start.json")
       if (running) {
-        let memory = kernel.memory.local[path.resolve(__dirname, "start.json")]
+        let memory = info.local('start.json')
         if (memory && memory.url) {
           return [
             { default: true, icon: "fa-solid fa-rocket", text: "Web UI", href: memory.url },
@@ -47,16 +47,11 @@ module.exports = {
         }
       } else {
         return [{
+          default: true,
           icon: "fa-solid fa-power-off",
           text: "Start",
-          menu: [
-            { icon: "fa-solid fa-terminal", text: "Default Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "Anime Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset anime${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "Realistic Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset realistic${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "SAI Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset sai${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "LCM Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset lcm${extraFlags}` } },
-            { icon: "fa-solid fa-terminal", text: "Lightning Mode", href: "start.json", params: { flags: `${alwaysCPU}${directml}--preset lightning${extraFlags}` } },
-          ]
+          href: "start.json",
+          params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` } },
         }, {
           icon: "fa-solid fa-rotate", text: "Update", href: "update.json"
         }, {
