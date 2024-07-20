@@ -51,7 +51,7 @@ module.exports = {
           icon: "fa-solid fa-power-off",
           text: "Start",
           href: "start.json",
-          params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` } },
+          params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
         }, {
           icon: "fa-solid fa-rotate", text: "Update", href: "update.json"
         }, {
