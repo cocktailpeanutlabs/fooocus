@@ -31,6 +31,8 @@ module.exports = {
       return [{ default: true, icon: "fa-solid fa-plug", text: "Installing...", href: "install.json" }]
     } else if (installed) {
       let running = info.running("start.json")
+      let updating = info.running("update.json")
+      let resetting = info.running("reset.json")
       if (running) {
         let memory = info.local('start.json')
         if (memory && memory.url) {
@@ -45,6 +47,32 @@ module.exports = {
             { icon: "fa-solid fa-rotate", text: "Update", href: "update.json" },
           ]
         }
+      } else if (updating) {
+        return [{
+          icon: "fa-solid fa-power-off",
+          text: "Start",
+          href: "start.json",
+          params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
+        }, {
+          default: true, icon: "fa-solid fa-rotate", text: "Updating", href: "update.json"
+        }, {
+          icon: "fa-solid fa-plug", text: "Reinstall", href: "install.json"
+       }, {
+          icon: "fa-solid fa-circle-xmark", text: "Reset", href: "reset.json", confirm: "Are you sure you wish to reset the app?"
+        }]
+      } else if (resetting) {
+        return [{
+          icon: "fa-solid fa-power-off",
+          text: "Start",
+          href: "start.json",
+          params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
+        }, {
+          icon: "fa-solid fa-rotate", text: "Updating", href: "update.json"
+        }, {
+          icon: "fa-solid fa-plug", text: "Reinstall", href: "install.json"
+       }, {
+          default: true, icon: "fa-solid fa-circle-xmark", text: "Resetting", href: "reset.json", confirm: "Are you sure you wish to reset the app?"
+        }]
       } else {
         return [{
           default: true,
