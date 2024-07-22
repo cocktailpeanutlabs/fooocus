@@ -4,7 +4,7 @@ module.exports = {
   title: "Fooocus",
   description: "Minimal Stable Diffusion UI",
   icon: "icon.jpeg",
-  menu: async (kernel, info) => {
+  menu: async (kernel) => {
 
     // exception handling for windows amd
     let windowsAmd = (kernel.gpu === "amd" && kernel.platform === "win32")
@@ -25,16 +25,17 @@ module.exports = {
 
     let alwaysCPU = (accelerated ? "" : "--always-cpu ")
 
-    let installing = info.running("install.json")
-    let installed = info.exists("app/env")
+    let installing = kernel.running(__dirname, "install.json")
+    let installed = await kernel.exists(__dirname, "app", "env")
+
     if (installing) {
       return [{ default: true, icon: "fa-solid fa-plug", text: "Installing...", href: "install.json" }]
     } else if (installed) {
-      let running = info.running("start.json")
-      let updating = info.running("update.json")
-      let resetting = info.running("reset.json")
+      let running = kernel.running(__dirname, "start.json")
+      let updating = kernel.running(__dirname, "update.json")
+      let resetting = kernel.running(__dirname, "reset.json")
       if (running) {
-        let memory = info.local('start.json')
+        let memory = kernel.memory.local[path.resolve(__dirname, "start.json")]
         if (memory && memory.url) {
           return [
             { default: true, icon: "fa-solid fa-rocket", text: "Web UI", href: memory.url },
