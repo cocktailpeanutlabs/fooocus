@@ -6,7 +6,13 @@
       "venv": "env",
       "path": "app",
       "message": "python launch.py {{input.flags}}",
-      "on": [{ "event": "/http:\/\/[0-9.:]+/", "done": true }]
+      "on": [{
+        "event": "/http:\/\/[0-9.:]+/",
+        "done": true
+      }, {
+        "event": "/error:/i",
+        "break": false
+      }]
     }
   }, {
     "method": "local.set",
