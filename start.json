@@ -16,18 +16,8 @@
     }
   }, {
     "method": "local.set",
-    "params": { "url": "{{input.event[0]}}" }
-  }, {
-    "method": "tab.open",
     "params": {
-      "target": "{{local.url}}",
-      "url": "{{local.url}}"
-    }
-  }, {
-    "method": "proxy.start",
-    "params": {
-      "uri": "{{local.url}}",
-      "name": "Local Sharing"
+      "url": "{{input.event[0]}}"
     }
   }]
 }
