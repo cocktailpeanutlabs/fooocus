@@ -1,10 +1,10 @@
 const path = require("path")
 module.exports = {
-  version: "2.0",
+  version: "3.0",
   title: "Fooocus",
   description: "Minimal Stable Diffusion UI",
   icon: "icon.jpeg",
-  menu: async (kernel) => {
+  menu: async (kernel, info) => {
 
     // exception handling for windows amd
     let windowsAmd = (kernel.gpu === "amd" && kernel.platform === "win32")
@@ -25,55 +25,58 @@ module.exports = {
 
     let alwaysCPU = (accelerated ? "" : "--always-cpu ")
 
-    let installing = kernel.running(__dirname, "install.json")
-    let installed = await kernel.exists(__dirname, "app", "env")
-
-    if (installing) {
-      return [{ default: true, icon: "fa-solid fa-plug", text: "Installing...", href: "install.json" }]
+    let installed = info.exists("app/env")
+    let running = {
+      install: info.running("install.json"),
+      start: info.running("start.json"),
+      update: info.running("update.json"),
+      reset: info.running("reset.json")
+    }
+    if (running.install) {
+      return [{
+        default: true,
+        icon: "fa-solid fa-plug",
+        text: "Installing",
+        href: "install.json",
+      }]
+    } else if (running.update) {
+      return [{
+        default: true,
+        icon: 'fa-solid fa-terminal',
+        text: "Updating",
+        href: "update.json",
+      }]
     } else if (installed) {
-      let running = kernel.running(__dirname, "start.json")
-      let updating = kernel.running(__dirname, "update.json")
-      let resetting = kernel.running(__dirname, "reset.json")
-      if (running) {
-        let memory = kernel.memory.local[path.resolve(__dirname, "start.json")]
-        if (memory && memory.url) {
-          return [
-            { default: true, icon: "fa-solid fa-rocket", text: "Web UI", href: memory.url },
-            { icon: "fa-solid fa-terminal", text: "Terminal", href: "start.json" },
-            { icon: "fa-solid fa-rotate", text: "Update", href: "update.json" },
-          ]
+      if (running.start) {
+        let local = info.local("start.json")
+        if (local && local.url) {
+          return [{
+            default: true,
+            icon: "fa-solid fa-rocket",
+            text: "Open Web UI",
+            href: local.url,
+          }, {
+            icon: 'fa-solid fa-terminal',
+            text: "Terminal",
+            href: "start.json",
+            params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
+          }]
         } else {
-          return [
-            { default: true, icon: "fa-solid fa-terminal", text: "Terminal", href: "start.json" },
-            { icon: "fa-solid fa-rotate", text: "Update", href: "update.json" },
-          ]
+          return [{
+            default: true,
+            icon: 'fa-solid fa-terminal',
+            text: "Terminal",
+            href: "start.json",
+            params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
+          }]
         }
-      } else if (updating) {
-        return [{
-          icon: "fa-solid fa-power-off",
-          text: "Start",
-          href: "start.json",
-          params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
-        }, {
-          default: true, icon: "fa-solid fa-rotate", text: "Updating", href: "update.json"
-        }, {
-          icon: "fa-solid fa-plug", text: "Reinstall", href: "install.json"
-       }, {
-          icon: "fa-solid fa-circle-xmark", text: "Reset", href: "reset.json", confirm: "Are you sure you wish to reset the app?"
-        }]
-      } else if (resetting) {
-        return [{
-          icon: "fa-solid fa-power-off",
-          text: "Start",
-          href: "start.json",
-          params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
-        }, {
-          icon: "fa-solid fa-rotate", text: "Updating", href: "update.json"
-        }, {
-          icon: "fa-solid fa-plug", text: "Reinstall", href: "install.json"
-       }, {
-          default: true, icon: "fa-solid fa-circle-xmark", text: "Resetting", href: "reset.json", confirm: "Are you sure you wish to reset the app?"
-        }]
+      } else if (running.reset) {
+          return [{
+            default: true,
+            icon: 'fa-solid fa-terminal',
+            text: "Resetting",
+            href: "reset.json",
+          }]
       } else {
         return [{
           default: true,
@@ -82,18 +85,27 @@ module.exports = {
           href: "start.json",
           params: { flags: `${alwaysCPU}${directml}--preset default${extraFlags}` }
         }, {
-          icon: "fa-solid fa-rotate", text: "Update", href: "update.json"
+          icon: "fa-solid fa-plug",
+          text: "Update",
+          href: "update.json",
         }, {
-          icon: "fa-solid fa-plug", text: "Reinstall", href: "install.json"
-       }, {
-          icon: "fa-solid fa-circle-xmark", text: "Reset", href: "reset.json", confirm: "Are you sure you wish to reset the app?"
+          icon: "fa-solid fa-plug",
+          text: "Install",
+          href: "install.json",
+        }, {
+          icon: "fa-regular fa-circle-xmark",
+          text: "Reset",
+          href: "reset.json",
+          confirm: "Are you sure you wish to reset the app?"
         }]
       }
     } else {
-      return [
-        { default: true, icon: "fa-solid fa-plug", text: "Install", href: "install.json" },
-        { icon: "fa-solid fa-rotate", text: "Update", href: "update.json" }
-      ]
+      return [{
+        default: true,
+        icon: "fa-solid fa-plug",
+        text: "Install",
+        href: "install.json",
+      }]
     }
   }
 }
