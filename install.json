@@ -19,7 +19,10 @@
     "params": {
       "venv": "env",
       "path": "app",
-      "message": "uv pip install -r requirements_versions.txt"
+      "message": [
+        "uv pip install -r requirements_versions.txt",
+        "uv pip install fastapi==0.122.0"
+        ]
     }
   }, {
     "method": "fs.share",
