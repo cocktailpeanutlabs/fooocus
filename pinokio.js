@@ -1,6 +1,6 @@
 const path = require("path")
 module.exports = {
-  version: "3.0",
+  version: "3.7",
   title: "Fooocus",
   description: "Minimal Stable Diffusion UI",
   icon: "icon.jpeg",
@@ -30,7 +30,8 @@ module.exports = {
       install: info.running("install.json"),
       start: info.running("start.json"),
       update: info.running("update.json"),
-      reset: info.running("reset.json")
+      reset: info.running("reset.json"),
+      link: info.running("link.js")
     }
     if (running.install) {
       return [{
@@ -77,6 +78,13 @@ module.exports = {
             text: "Resetting",
             href: "reset.json",
           }]
+      } else if (running.link) {
+        return [{
+          default: true,
+          icon: 'fa-solid fa-terminal',
+          text: "Deduplicating",
+          href: "link.js",
+        }]
       } else {
         return [{
           default: true,
@@ -93,8 +101,12 @@ module.exports = {
           text: "Install",
           href: "install.json",
         }, {
+          icon: "fa-solid fa-file-zipper",
+          text: "<div><strong>Save Disk Space</strong><div>Deduplicates redundant library files</div></div>",
+          href: "link.js",
+        }, {
           icon: "fa-regular fa-circle-xmark",
-          text: "Reset",
+          text: "<div><strong>Reset</strong><div>Revert to pre-install state</div></div>",
           href: "reset.json",
           confirm: "Are you sure you wish to reset the app?"
         }]
